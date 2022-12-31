@@ -2,6 +2,7 @@ package jpabook.jpashop.service;
 
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.repository.MemberRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class MemberServiceTest {
     @Autowired MemberRepository memberRepository;
 
     @Test
-//    @Rollback(false) // roolback 안하고 commit
+//    @Rollback(false) // rollback 안하고 commit
     public void 회원가입() throws Exception {
         //given
         Member member = new Member();
@@ -45,10 +46,16 @@ public class MemberServiceTest {
 
         //when
         memberService.join(member1);
-//        memberService.join(member2); // 예외가 발생해야함!
+        Assertions.assertThrows(IllegalStateException.class, ()-> {
+            memberService.join(member2);  // 예외가 발생해야함!
+        });
+//        try {                         // 이거 대신 위에 (expected = IllegalStateException) 추가함!
+//        } catch (IllegalStateException e){
+//            return;
+//        }
 
         //then
-//        fail("예외가 발생해야 한다.");
+//        fail("예외가 발생해야 한다."); // 코드가 돌다가 여기 오면 안됨. 여기 오면 fail
     }
 
 }
