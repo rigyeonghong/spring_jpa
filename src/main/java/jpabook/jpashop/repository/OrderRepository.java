@@ -25,14 +25,14 @@ public class OrderRepository {
     }
 
     // 동적 쿼리 -> 정적 쿼리도 좀만 복잡해지면 Querydsl 하면 좋음 (복잡한 jpql 해결 위해)
-    public List<Order> findAll(OrderSearch orderSearch) {
 
+    public List<Order> findAllByString(OrderSearch orderSearch) {
+        //language=JPAQL
         String jpql = "select o From Order o join o.member m";
         boolean isFirstCondition = true;
-
         //주문 상태 검색
         if (orderSearch.getOrderStatus() != null) {
-            if (isFirstCondition) { // 처음이면
+            if (isFirstCondition) {
                 jpql += " where";
                 isFirstCondition = false;
             } else {
@@ -40,7 +40,6 @@ public class OrderRepository {
             }
             jpql += " o.status = :status";
         }
-
         //회원 이름 검색
         if (StringUtils.hasText(orderSearch.getMemberName())) {
             if (isFirstCondition) {
@@ -51,7 +50,6 @@ public class OrderRepository {
             }
             jpql += " m.name like :name";
         }
-
         TypedQuery<Order> query = em.createQuery(jpql, Order.class)
                 .setMaxResults(1000); //최대 1000건
         if (orderSearch.getOrderStatus() != null) {
