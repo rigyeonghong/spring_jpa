@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional // jpa의 모든 데이터 변경 등 로직들은 transaction 안에서 수행되야함
+@Transactional(readOnly = true) // jpa의 모든 데이터 변경 등 로직들은 transaction 안에서 수행되야함
 @RequiredArgsConstructor // final 잡힌 애 생성자 인잭션 해줌
 public class MemberService {
 
@@ -22,7 +22,9 @@ public class MemberService {
 //        this.memberRepository = memberRepository;
 //    }
 
-    // 회원 가입
+    /**
+     * 회원가입
+     */
     @Transactional
     public Long join(Member member){
 
@@ -38,7 +40,9 @@ public class MemberService {
         }
     }
 
-    // 회원 전체 조회
+    /**
+     * 전체 회원 조회
+     */
 //    @Transactional(readOnly = true) // jpa가 조회하는 곳에서 좀 더 성능 최적화함. 읽기전용이면 리소스 많이 쓰지마.
     public List<Member> findMembers() {
         return memberRepository.findAll();
